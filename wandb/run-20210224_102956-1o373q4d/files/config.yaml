@@ -1,0 +1,196 @@
+wandb_version: 1
+
+_wandb:
+  desc: null
+  value:
+    cli_version: 0.10.20
+    framework: huggingface
+    huggingface_version: 4.2.2
+    is_jupyter_run: false
+    is_kaggle_kernel: false
+    python_version: 3.6.9
+    t:
+      1:
+      - 1
+      - 11
+      2:
+      - 1
+      - 11
+      3:
+      - 2
+      4: 3.6.9
+      5: 0.10.20
+      6: 4.2.2
+      8:
+      - 5
+components:
+  desc: null
+  value:
+    ner:
+      factory: ner
+      model:
+        '@architectures': spacy.TransitionBasedParser.v2
+        extra_state_tokens: false
+        hidden_width: 64
+        maxout_pieces: 2
+        'no': null
+        state_type: ner
+        tok2vec:
+          '@architectures': spacy-transformers.TransformerListener.v1
+          grad_factor: 1.0
+          pooling:
+            '@layers': reduce_mean.v1
+          upstream: '*'
+        use_upper: false
+      moves: null
+      update_with_oracle_cut_size: 100
+    parser:
+      factory: parser
+      learn_tokens: false
+      min_action_freq: 30
+      model:
+        '@architectures': spacy.TransitionBasedParser.v2
+        extra_state_tokens: false
+        hidden_width: 128
+        maxout_pieces: 3
+        'no': null
+        state_type: parser
+        tok2vec:
+          '@architectures': spacy-transformers.TransformerListener.v1
+          grad_factor: 1.0
+          pooling:
+            '@layers': reduce_mean.v1
+          upstream: '*'
+        use_upper: false
+      moves: null
+      update_with_oracle_cut_size: 100
+    tagger:
+      factory: tagger
+      model:
+        '@architectures': spacy.Tagger.v1
+        'no': null
+        tok2vec:
+          '@architectures': spacy-transformers.TransformerListener.v1
+          grad_factor: 1.0
+          pooling:
+            '@layers': reduce_mean.v1
+          upstream: '*'
+    transformer:
+      factory: transformer
+      max_batch_items: 4096
+      model:
+        '@architectures': spacy-transformers.TransformerModel.v1
+        get_spans:
+          '@span_getters': spacy-transformers.strided_spans.v1
+          stride: 96
+          window: 128
+        name: DJSammy/bert-base-danish-uncased_BotXO,ai
+        tokenizer_config:
+          use_fast: true
+      set_extra_annotations:
+        '@annotation_setters': spacy-transformers.null_annotation_setter.v1
+corpora:
+  desc: null
+  value:
+    dev:
+      '@readers': spacy.Corpus.v1
+      augmenter: null
+      gold_preproc: false
+      limit: 0
+      max_length: 0
+      path: corpus/dane/dev.spacy
+    train:
+      '@readers': spacy.Corpus.v1
+      augmenter: null
+      gold_preproc: false
+      limit: 0
+      max_length: 500
+      path: corpus/dane/train.spacy
+initialize:
+  desc: null
+  value:
+    after_init: null
+    before_init: null
+    init_tok2vec: null
+    lookups: null
+    vectors: null
+    vocab_data: null
+nlp:
+  desc: null
+  value:
+    after_creation: null
+    after_pipeline_creation: null
+    batch_size: 128
+    before_creation: null
+    disabled: []
+    lang: da
+    pipeline:
+    - transformer
+    - tagger
+    - parser
+    - ner
+    tokenizer:
+      '@tokenizers': spacy.Tokenizer.v1
+paths:
+  desc: null
+  value:
+    dev: corpus/dane/dev.spacy
+    init_tok2vec: null
+    train: corpus/dane/train.spacy
+    vectors: null
+system:
+  desc: null
+  value:
+    gpu_allocator: pytorch
+    seed: 0
+training:
+  desc: null
+  value:
+    accumulate_gradient: 3
+    batcher:
+      '@batchers': spacy.batch_by_padded.v1
+      buffer: 256
+      discard_oversize: true
+      get_length: null
+      size: 2000
+    before_to_disk: null
+    dev_corpus: corpora.dev
+    dropout: 0.1
+    eval_frequency: 200
+    frozen_components: []
+    gpu_allocator: pytorch
+    logger:
+      '@loggers': spacy.WandbLogger.v1
+      project_name: spacy_dane_transformer
+      remove_config_values: []
+    max_epochs: 0
+    max_steps: 20000
+    optimizer:
+      '@optimizers': Adam.v1
+      beta1: 0.9
+      beta2: 0.999
+      eps: 1.0e-08
+      grad_clip: 1.0
+      l2: 0.01
+      l2_is_weight_decay: true
+      learn_rate:
+        '@schedules': warmup_linear.v1
+        initial_rate: 5.0e-05
+        total_steps: 20000
+        warmup_steps: 250
+      use_averages: false
+    patience: 1600
+    score_weights:
+      dep_las: 0.17
+      dep_las_per_type: null
+      dep_uas: 0.17
+      ents_f: 0.33
+      ents_p: 0.0
+      ents_per_type: null
+      ents_r: 0.0
+      sents_f: 0.0
+      sents_p: null
+      sents_r: null
+      tag_acc: 0.33
+    seed: 0
+    train_corpus: corpora.train

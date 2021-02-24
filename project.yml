@@ -6,6 +6,13 @@ description: >
     format and training and evaluating the model. The template uses the `BotXO`
     transformer for Danish downloaded via. Huggingface.
 
+    You can run from til yaml file using
+    spacy project run WORKFLOW/COMMAND
+
+    for instance you might want to run the workflow "all" to run the entire pipeline:
+    spacy project run all
+
+
 # Variables can be referenced across the project.yml using ${vars.var_name}
 vars:
   config: "config"
@@ -16,7 +23,7 @@ vars:
   test_name: "dane_test"
   package_name: "da_core_dane_tft"
   package_version: "0.0.0"
-  gpu: -1
+  gpu: 1
   spacy_version: ">=3.0.0"
 
 # These are the directories that the project needs. The project CLI will make
@@ -39,17 +46,23 @@ workflows:
     - package
 
 commands:
-    - name: "install"
+  - name: install
     help: "Install dependencies and log in to Weights & Biases"
     script:
       - "pip install -r requirements.txt"
       - "wandb login"
     deps:
       - "requirements.txt"
+
   - name: fetch_assets
+    help: "Download dataset and place it in assets"
     script:
       - "mkdir -p assets/dane"
       - "python utils.py" 
+    outputs:
+      - "assets/${vars.dataset}/${vars.train_name}.conllu"
+      - "assets/${vars.dataset}/${vars.dev_name}.conllu"
+      - "assets/${vars.dataset}/${vars.test_name}.conllu"
 
   - name: convert
     help: "Convert the data to spaCy's format"

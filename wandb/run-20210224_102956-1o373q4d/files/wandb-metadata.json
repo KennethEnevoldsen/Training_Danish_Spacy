@@ -1,0 +1,35 @@
+{
+    "os": "Linux-4.15.0-130-generic-x86_64-with-Ubuntu-18.04-bionic",
+    "python": "3.6.9",
+    "heartbeatAt": "2021-02-24T09:29:57.411530",
+    "startedAt": "2021-02-24T09:29:56.307249",
+    "docker": null,
+    "gpu": "Quadro RTX 8000",
+    "gpu_count": 2,
+    "cpu_count": 40,
+    "cuda": "10.2.89",
+    "args": [
+        "train",
+        "configs/config.cfg",
+        "--output",
+        "training/dane",
+        "--gpu-id",
+        "1",
+        "--paths.train",
+        "corpus/dane/train.spacy",
+        "--paths.dev",
+        "corpus/dane/dev.spacy",
+        "--nlp.lang=da"
+    ],
+    "state": "running",
+    "program": "/home/kenneth/.Envs/spacy_train/lib/python3.6/site-packages/spacy/__main__.py",
+    "git": {
+        "remote": "https://github.com/KennethEnevoldsen/spacy_train",
+        "commit": "ef1579265b77f1b5bd6414e38288d66a9f752285"
+    },
+    "email": "KennethcEnevoldsen@gmail.com",
+    "root": "/home/kenneth/github/spacy_train",
+    "host": "ubuntu",
+    "username": "kenneth",
+    "executable": "/home/kenneth/.Envs/spacy_train/bin/python3"
+}
