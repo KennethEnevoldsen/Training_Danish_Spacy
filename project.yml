@@ -21,14 +21,14 @@ vars:
   train_name: "dane_train"
   dev_name: "/dane_dev"
   test_name: "dane_test"
-  package_name: "da_core_dane_tft"
+  package_name: "da_core_dane_large_tft"
   package_version: "0.0.0"
-  gpu: 1
+  gpu: 0
   spacy_version: ">=3.0.0"
 
 # These are the directories that the project needs. The project CLI will make
 # sure that they always exist.
-directories: ["assets", "corpus", "training", "metrics"]
+directories: ["assets", "corpus", "training", "metrics", "packages"]
 
 assets:
   - dest: "assets/${vars.dataset}"
@@ -99,9 +99,9 @@ commands:
   - name: evaluate
     help: "Evaluate on the test data and save the metrics"
     script:
-      - "python -m spacy evaluate ./training/${vars.dataset}/model-best ./corpus/${vars.dataset}/test.spacy --output ./metrics/${vars.dataset}.json --gpu-id ${vars.gpu}"
+      - "python -m spacy evaluate ./training/${vars.dataset}/model-last ./corpus/${vars.dataset}/test.spacy --output ./metrics/${vars.dataset}.json --gpu-id ${vars.gpu}"
     deps:
-      - "training/${vars.dataset}/model-best"
+      - "training/${vars.dataset}/model-last"
       - "corpus/${vars.dataset}/test.spacy"
     outputs:
       - "metrics/${vars.dataset}.json"
@@ -109,11 +109,11 @@ commands:
   - name: package
     help: "Package the trained model so it can be installed"
     script:
-      - "python -m spacy package training/${vars.dataset}/model-best packages --name ${vars.package_name} --version ${vars.package_version} --force"
+      - "python -m spacy package training/${vars.dataset}/model-last packages --name ${vars.package_name} --version ${vars.package_version} --force"
     deps:
-      - "training/${vars.dataset}/model-best"
+      - "training/${vars.dataset}/model-last"
     outputs_no_cache:
-      - "packages/${vars.lang}_${vars.package_name}-${vars.package_version}/dist/en_${vars.package_name}-${vars.package_version}.tar.gz"
+      - "packages/${vars.lang}_${vars.package_name}-${vars.package_version}/dist/${vars.lang}_${vars.package_name}-${vars.package_version}.tar.gz"
 
   - name: clean
     help: "Remove intermediate files"
